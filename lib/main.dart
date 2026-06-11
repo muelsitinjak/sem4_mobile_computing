@@ -25,21 +25,52 @@ class MyApp extends StatelessWidget {
 
 // Fungsi untuk membuat list yang bisa di-scroll ke bawah
 Widget daftarFilmVertikal() {
-  // Daftar nama film
-  final List<String> filmNames = [
-    'Menangkan Hatiku',
-    'Preman Pensiun',
-    'Prestasi Terbaik',
-    'Semangat Juang',
-    'Pemberontakan',
-    'Bataks',
-    'Agama dan Cinta',
-    'Menantang Takdir',
-    'Pengantin Baru',
+  // Daftar 10 film Indonesia beserta URL posternya (Menggunakan TMDB yang lebih stabil)
+  final List<Map<String, String>> films = [
+    {
+      'judul': 'Pengabdi Setan',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/wtUaJFqFZMFjgN7KM0ikIFiemYB.jpg'
+    },
+    {
+      'judul': 'Laskar Pelangi',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/qoiVrVK09K7GQfrTnRUcAclu3L.jpg'
+    },
+    {
+      'judul': 'Gundala',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/wZCo5qUz3IdIhs6466B9PpFglXU.jpg'
+    },
+    {
+      'judul': 'Warkop DKI Reborn',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/uSaaCp44SrcLIrpIhaWyRsYKtOm.jpg'
+    },
+    {
+      'judul': 'Miracle in Cell No. 7',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/bOth4QmNyEkalwahfPCfiXjNh1r.jpg'
+    },
+    {
+      'judul': 'KKN di Desa Penari',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/63InZxeGgfNQCoWkImR14fB99AY.jpg'
+    },
+    {
+      'judul': 'Habibie & Ainun',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/eOdYhBFF7vE5v83KVVQfDEyLgEu.jpg'
+    },
+    {
+      'judul': 'Cek Toko Sebelah',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/ygOPhiygrijDa0E7x2ETWWXE6HP.jpg'
+    },
+    {
+      'judul': 'Mencuri Raden Saleh',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/66yOibmlqxASFoNyEZIORELJqBC.jpg'
+    },
+    {
+      'judul': 'Ayat-Ayat Cinta',
+      'url_foto': 'https://image.tmdb.org/t/p/w500/pWFTabzMwSbso1DsRwE8My4IL1h.jpg'
+    }
   ];
 
   return ListView.builder(
-    itemCount: filmNames.length,
+    itemCount: films.length,
     itemBuilder: (context, index) {
       
       // Membuat kotak untuk setiap 1 baris film
@@ -58,16 +89,35 @@ Widget daftarFilmVertikal() {
         child: Row(
           children: [
             // ==========================================
-            // 1. BAGIAN KIRI: KOTAK PENGGANTI FOTO FILM
+            // 1. BAGIAN KIRI: MENAMPILKAN FOTO FILM
             // ==========================================
-            Container(
-              width: 80,
-              height: 110,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey, // Warna kotak foto
-                borderRadius: BorderRadius.circular(8.0),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.network(
+                films[index]['url_foto']!, // Mengambil URL foto dari data
+                width: 80,
+                height: 110,
+                fit: BoxFit.cover,
+                // Menambahkan indikator loading
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return const SizedBox(
+                    width: 80,
+                    height: 110,
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                },
+                // Menangani error jika gambar gagal dimuat
+                errorBuilder: (context, error, stackTrace) {
+                  debugPrint('Error memuat gambar: $error');
+                  return Container(
+                    width: 80,
+                    height: 110,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.broken_image, color: Colors.grey),
+                  );
+                },
               ),
-              child: const Icon(Icons.movie, color: Colors.white, size: 40),
             ),
             
             const SizedBox(width: 16), // Jarak kosong antara foto dan teks
@@ -84,7 +134,7 @@ Widget daftarFilmVertikal() {
                   
                   // Judul Film dari array
                   Text(
-                    filmNames[index],
+                    films[index]['judul']!,
                     style: const TextStyle(
                       fontSize: 18, 
                       fontWeight: FontWeight.bold,
@@ -94,8 +144,8 @@ Widget daftarFilmVertikal() {
                   const SizedBox(height: 8), // Jarak antara judul dan rating
                   
                   // Rating (Bintang dan Angka disusun kiri-kanan pakai Row)
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Icon(Icons.star, color: Colors.orange, size: 20), // Icon Bintang
                       SizedBox(width: 4),
                       Text(
