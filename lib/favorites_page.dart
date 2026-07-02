@@ -31,10 +31,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
               itemBuilder: (context, index) {
                 final film = favoriteFilms[index];
                 return ListTile(
-                  leading: ClipRRect(
+                  leading: ClipRRect( // Akses data dengan aman
                     borderRadius: BorderRadius.circular(4.0),
                     child: Image.network(
-                      film['url_foto']!, 
+                      // Gunakan null-aware operator dan berikan nilai default
+                      film['url_foto'] as String? ?? '', 
                       width: 50, 
                       height: 70,
                       fit: BoxFit.cover,
@@ -48,12 +49,14 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       }
                     ),
                   ),
-                  title: Text(film['judul']!),
+                  // Akses judul dengan aman
+                  title: Text(film['judul'] as String? ?? 'No Title'),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
                       // Hapus langsung dari List menggunakan judul
                       setState(() {
+                        // Logika penghapusan tetap sama
                         FavoritesManager.favoriteFilms.removeWhere((f) => f['judul'] == film['judul']);
                       });
                     },

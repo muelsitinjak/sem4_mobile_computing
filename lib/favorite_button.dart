@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'favorites_manager.dart';
 
 class FavoriteButton extends StatefulWidget {
-  final Map<String, String> film;
+  // Mengubah tipe data agar sesuai dengan data dari BLoC (Map<String, dynamic>)
+  final Map<String, dynamic> film;
 
   const FavoriteButton({super.key, required this.film});
 
